@@ -53,9 +53,12 @@ func (sani *Sani) FilterA(params ...func(sani *Sani, s *goquery.Selection, url *
             }
             return
         }
+        if s_url.Scheme == "" {
+            s_url.Scheme = sani.base_host.Scheme
+        }
 
         if s_url.Host == "" {
-            s_url.Host = sani.base_host
+            s_url.Host = sani.base_host.Host
             s_url.Path = "/"+strings.TrimLeft(s_url.Path, "./")
             s.SetAttr("href", s_url.String())
         }

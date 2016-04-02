@@ -13,6 +13,7 @@ func TestClearAll(t *testing.T) {
     if sani.Error != nil {
         t.Errorf("Error open file, %q", "./testdata/test1.html")
     }
+    sani.SetBaseHost("http://example.com/")
     sani.SetAudioPreload("none")
 
     sani.RemoveTags()
@@ -46,7 +47,9 @@ func TestClearAll(t *testing.T) {
     }
     if html_1 != html_2 {
         t.Errorf("Error generate, HTML != test1_result.html") // переписать, добавить вывод diff файлов по строчно
+        fmt.Println("======== generate file =======")
         fmt.Println(html_1)
+        fmt.Println("======== expected file =======")
         fmt.Println(html_2)
     }
 

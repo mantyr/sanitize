@@ -7,8 +7,13 @@ import (
     "net/url"
 )
 
+func (sani *Sani) SetBaseHost(base_host string) *Sani {
+    sani.base_host, _ = url.Parse(base_host)
+    return sani
+}
+
 // чистим картинки, при надобности закачиваем
-func (sani *Sani) FilterImg(params ...func(sani *Sani, s *goquery.Selection, url *url.URL)) *Sani {
+func (sani *Sani) FilterImg(params ...func(f_sani *Sani, s *goquery.Selection, url *url.URL)) *Sani {
     sani.Dom.Find("img").Each(func(i int, s *goquery.Selection) {
         sani.is_revalue = true
 
@@ -30,11 +35,11 @@ func (sani *Sani) FilterImg(params ...func(sani *Sani, s *goquery.Selection, url
         }
 
         if s_url.Scheme == "" {
-            s_url.Scheme = "http"
+            s_url.Scheme = sani.base_host.Scheme
         }
 
         if s_url.Host == "" {
-            s_url.Host = sani.base_host
+            s_url.Host = sani.base_host.Host
             s_url.Path = "/"+strings.TrimLeft(s_url.Path, "./")
         }
 

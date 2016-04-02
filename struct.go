@@ -2,6 +2,7 @@ package sanitize
 
 import (
     "github.com/mantyr/goquery"
+    "net/url"
 )
 
 type Sani struct {
@@ -9,7 +10,7 @@ type Sani struct {
     Error      error
     is_revalue bool
 
-    base_host  string            // адрес сайта для подстановки в адреса у которых относительные ссылки, тоже и для картинок
+    base_host  *url.URL           // адрес сайта для подстановки в адреса у которых относительные ссылки, тоже и для картинок
 
     ignore_a_empty_href   bool   // нужно ли удалять пустые ссылки, по умолчанию false - не нужно
     ignore_a_error_href   bool   // нужно ли удалять битые ссылки, по умолчанию false - не нужно
