@@ -4,6 +4,9 @@ import (
     "github.com/mantyr/goquery"
     "github.com/mantyr/runner"
     "strings"
+    "golang.org/x/net/html"
+    "golang.org/x/net/html/atom"
+    "fmt"
 )
 
 // удаляем лишние теги, такие как скрипты, стили, формы и прочее
@@ -39,15 +42,43 @@ func (sani *Sani) RemoveEmptyTags(params ...string) *Sani {
     if len(params) > 0 {
         tags = strings.Join(params, ", ")
     }
-
+fmt.Println(tags)
     sani.Dom.Find(tags).Each(func(i int, s *goquery.Selection) {
         line, err := s.Html()
-        if err != nil || len(runner.Trim(line)) == 0 {
+        line = runner.Trim(line)
+
+        if err != nil || line == "" || line == "<br/>" || line == "<br>" {
             s.Remove()
             sani.is_revalue = true
-            return
         }
     })
 
+    return sani
+}
+
+func (sani *Sani) RemoveDubleBr() *Sani {
+    sani.Dom.Find("br").Each(func(i int, s *goquery.Selection){
+        if len(s.Nodes) == 0 {
+            return
+        }
+
+        next := s.Nodes[0].NextSibling
+        for {
+            if next == nil {
+                break
+            }
+            if next.Type == html.TextNode && runner.Trim(next.Data) != "" {  // если текст
+                break
+            }
+            if next.Type == html.ElementNode && next.DataAtom != atom.Br {   // если дальше идёт тег не <br>
+                break
+            }
+            if next.Type == html.ElementNode && next.DataAtom == atom.Br {   // если дальше идёт тег <br> то текущий убираем, следующий проверим при следующей итерации
+                s.Remove()
+                break
+            }
+            next = next.NextSibling
+        }
+    })
     return sani
 }

@@ -21,8 +21,15 @@ func (sani *Sani) LoadFile(address string) error {
     }
     defer file.Close()
 
-    sani.Dom, sani.Error = goquery.NewDocumentFromReader(file)
+    var doc *goquery.Document
+    doc, sani.Error = goquery.NewDocumentFromReader(file)
+    sani.Dom = doc.Clone()
     return sani.Error
+}
+
+func (sani *Sani) SetSelection(sel *goquery.Selection) *Sani {
+    sani.Dom = sel
+    return sani
 }
 
 func (sani *Sani) LoadString(text string) error {
@@ -32,7 +39,9 @@ func (sani *Sani) LoadString(text string) error {
     }
     reader := bytes.NewReader([]byte(text))
 
-    sani.Dom, sani.Error = goquery.NewDocumentFromReader(reader)
+    var doc *goquery.Document
+    doc, sani.Error = goquery.NewDocumentFromReader(reader)
+    sani.Dom = doc.Clone()
     return sani.Error
 }
 

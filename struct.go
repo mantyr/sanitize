@@ -6,7 +6,7 @@ import (
 )
 
 type Sani struct {
-    Dom        *goquery.Document
+    Dom        *goquery.Selection
     Error      error
     is_revalue bool
 
