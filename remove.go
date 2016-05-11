@@ -6,7 +6,6 @@ import (
     "strings"
     "golang.org/x/net/html"
     "golang.org/x/net/html/atom"
-    "fmt"
 )
 
 // удаляем лишние теги, такие как скрипты, стили, формы и прочее
@@ -42,7 +41,6 @@ func (sani *Sani) RemoveEmptyTags(params ...string) *Sani {
     if len(params) > 0 {
         tags = strings.Join(params, ", ")
     }
-fmt.Println(tags)
     sani.Dom.Find(tags).Each(func(i int, s *goquery.Selection) {
         line, err := s.Html()
         line = runner.Trim(line)
