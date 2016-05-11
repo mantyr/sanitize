@@ -4,7 +4,6 @@ import (
     "github.com/mantyr/goquery"
     "os"
     "bytes"
-    "errors"
 )
 
 func New() (s *Sani) {
@@ -33,10 +32,6 @@ func (sani *Sani) SetSelection(sel *goquery.Selection) *Sani {
 }
 
 func (sani *Sani) LoadString(text string) error {
-    if len(text) == 0 {
-        sani.Error = errors.New("no text for goquery parser")
-        return sani.Error
-    }
     reader := bytes.NewReader([]byte(text))
 
     var doc *goquery.Document
